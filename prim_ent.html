@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Primera Entrevista Vincular - Clínica de la Convergencia</title>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e3a8a;
+            --accent-color: #d97706;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --border-focus: #3b82f6;
+            --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-subtle);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 850px) {
+            .form-grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .column-integrante {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1.5px solid var(--border-color);
+        }
+
+        .column-integrante h4 {
+            color: var(--primary-color);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.4rem;
+        }
+
+        .form-control {
+            margin-bottom: 1rem;
+        }
+
+        .form-control label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-control textarea, .form-control select, .form-control input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background-color: #ffffff;
+            transition: all 0.2s ease;
+        }
+
+        .form-control textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-control textarea:focus, .form-control select:focus, .form-control input:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        /* Sección de Síntesis y Conclusiones Analíticas */
+        .synthesis-section {
+            background: #fffbeb;
+            border: 1.5px solid #fcd34d;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+        }
+
+        .synthesis-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .synthesis-header h3 {
+            color: #92400e;
+            margin: 0;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .btn-analizar {
+            background-color: var(--accent-color);
+            color: #ffffff;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            box-shadow: var(--shadow-subtle);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn-analizar:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+
+        .btn-group {
+            margin-top: 2rem;
+            text-align: right;
+        }
+
+        .btn-registrar {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: #ffffff;
+            padding: 0.85rem 2.5rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            box-shadow: var(--shadow-subtle);
+            transition: all 0.2s ease;
+        }
+
+        .btn-registrar:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-elevated);
+            filter: brightness(1.1);
+        }
+
+        /* Historial */
+        .history-item {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--secondary-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.25rem;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .history-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 800px) {
+            .history-grid { grid-template-columns: 1fr; }
+        }
+
+        .history-box {
+            background: #ffffff;
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Formulario de Primera Entrevista -->
+        <div class="card">
+            <h2>Primera Entrevista Vincular: Mapa de Demandas y Expectativas</h2>
+            
+            <form id="prim-ent-form">
+                <!-- Selector de Pareja -->
+                <div class="form-control" style="margin-bottom: 1.5rem;">
+                    <label>Pareja Consultante</label>
+                    <select id="select-pareja" required style="max-width: 400px; padding: 0.75rem;">
+                        <option value="">Seleccione una pareja registrada...</option>
+                    </select>
+                </div>
+
+                <div class="form-grid-2">
+                    <!-- Integrante 1 -->
+                    <div class="column-integrante">
+                        <h4 id="label-p1">Integrante 1</h4>
+                        
+                        <div class="form-control">
+                            <label>Expectativas en torno a la terapia</label>
+                            <textarea id="p1-expectativas" required placeholder="¿Qué espera encontrar o vivir en el proceso terapéutico?"></textarea>
+                        </div>
+
+                        <div class="form-control">
+                            <label>Deseos a lograr</label>
+                            <textarea id="p1-deseos" required placeholder="¿Cuáles son sus aspiraciones personales y vinculares?"></textarea>
+                        </div>
+
+                        <div class="form-control">
+                            <label>Demandas hacia el otro</label>
+                            <textarea id="p1-demandas" required placeholder="¿Qué le reclama, exige o demanda a su pareja?"></textarea>
+                        </div>
+
+                        <div class="form-control">
+                            <label>Intención Vincular</label>
+                            <select id="p1-intencion">
+                                <option value="Continuar y mejorar el vínculo">Continuar y mejorar el vínculo</option>
+                                <option value="Dudas / Ambigüedad">Dudas / Ambigüedad</option>
+                                <option value="Desarmar el vínculo y separarse">Desarmar el vínculo y separarse</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Integrante 2 -->
+                    <div class="column-integrante">
+                        <h4 id="label-p2">Integrante 2</h4>
+                        
+                        <div class="form-control">
+                            <label>Expectativas en torno a la terapia</label>
+                            <textarea id="p2-expectativas" required placeholder="¿Qué espera encontrar o vivir en el proceso terapéutico?"></textarea>
+                        </div>
+
+                        <div class="form-control">
+                            <label>Deseos a lograr</label>
+                            <textarea id="p2-deseos" required placeholder="¿Cuáles son sus aspiraciones personales y vinculares?"></textarea>
+                        </div>
+
+                        <div class="form-control">
+                            <label>Demandas hacia el otro</label>
+                            <textarea id="p2-demandas" required placeholder="¿Qué le reclama, exige o demanda a su pareja?"></textarea>
+                        </div>
+
+                        <div class="form-control">
+                            <label>Intención Vincular</label>
+                            <select id="p2-intencion">
+                                <option value="Continuar y mejorar el vínculo">Continuar y mejorar el vínculo</option>
+                                <option value="Dudas / Ambigüedad">Dudas / Ambigüedad</option>
+                                <option value="Desarmar el vínculo y separarse">Desarmar el vínculo y separarse</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Análisis Clínico de Coincidencias y Conflictos con Botón Automático -->
+                <div class="synthesis-section">
+                    <div class="synthesis-header">
+                        <h3>Síntesis Analítica: Coincidencias, Divergencias y Nudos de Conflicto</h3>
+                        <button type="button" class="btn-analizar" onclick="window.ejecutarAnalisisAutomatico()">
+                            <span>🔍 Analizar Automáticamente</span>
+                        </button>
+                    </div>
+                    <div class="form-control">
+                        <label>Evaluación del terapeuta sobre la articulación de demandas y expectativas</label>
+                        <textarea id="analisis-convergencia" required placeholder="Haga clic en 'Analizar Automáticamente' para generar una lectura preeliminar basada en las respuestas ingresadas, o escriba su propia síntesis clínica..."></textarea>
+                    </div>
+                    <div class="form-control" style="margin-top: 1rem;">
+                        <label>Fecha de la Entrevista</label>
+                        <input type="date" id="entrevista-fecha" required style="max-width: 250px;">
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="btn-registrar" onclick="window.guardarPrimeraEntrevista()">Guardar Primera Entrevista</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Historial de Primeras Entrevistas -->
+        <div class="card">
+            <h2>Historial de Primeras Entrevistas Registradas</h2>
+            <div id="historial-entrevistas">
+                <!-- Se cargan dinámicamente desde Firestore -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase y Lógica del Módulo -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Configuración de la nueva base de datos aislada
+        const firebaseConfig = {
+            apiKey: "AIzaSyAlP3ApO4-HdHHPdhyfgrhzibK6s-PIIjs",
+            authDomain: "modulo-terapia-pareja.firebaseapp.com",
+            projectId: "modulo-terapia-pareja",
+            storageBucket: "modulo-terapia-pareja.firebasestorage.app",
+            messagingSenderId: "856746891223",
+            appId: "1:856746891223:web:7fe119aaa6ce42a2ff1d92"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Obtener el terapeuta activo de la sesión
+        const terapeutaActual = localStorage.getItem("terapeuta_id") || "GRIOS";
+
+        let parejasMap = {};
+        let nombresIntegrantes = { p1: "Integrante 1", p2: "Integrante 2" };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('entrevista-fecha').valueAsDate = new Date();
+            cargarParejasSelector();
+            cargarHistorialEntrevistas();
+        });
+
+        // Cargar parejas filtradas por terapeuta_id y guardar referencia de nombres
+        async function cargarParejasSelector() {
+            const select = document.getElementById('select-pareja');
+            if (!select) return;
+
+            try {
+                const q = query(collection(db, "parejas_pacientes"), where("terapeuta_id", "==", terapeutaActual));
+                const querySnapshot = await getDocs(q);
+
+                select.innerHTML = '<option value="">Seleccione una pareja registrada...</option>';
+                let total = 0;
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const id = docSnap.id;
+                    if (data.p1 && data.p2) {
+                        parejasMap[id] = data;
+                        const parejaNombre = `${data.p1.nombre} & ${data.p2.nombre}`;
+                        const opt = document.createElement('option');
+                        opt.value = id;
+                        opt.textContent = parejaNombre;
+                        select.appendChild(opt);
+                        total++;
+                    }
+                });
+
+                if (total === 0) {
+                    select.innerHTML = '<option value="">No hay parejas registradas</option>';
+                }
+
+                select.onchange = function() {
+                    const selectedId = this.value;
+                    if (selectedId && parejasMap[selectedId]) {
+                        nombresIntegrantes.p1 = parejasMap[selectedId].p1.nombre;
+                        nombresIntegrantes.p2 = parejasMap[selectedId].p2.nombre;
+                        document.getElementById('label-p1').textContent = `Integrante 1: ${nombresIntegrantes.p1}`;
+                        document.getElementById('label-p2').textContent = `Integrante 2: ${nombresIntegrantes.p2}`;
+                    } else {
+                        nombresIntegrantes.p1 = "Integrante 1";
+                        nombresIntegrantes.p2 = "Integrante 2";
+                        document.getElementById('label-p1').textContent = 'Integrante 1';
+                        document.getElementById('label-p2').textContent = 'Integrante 2';
+                    }
+                };
+            } catch (e) {
+                console.error("Error al cargar parejas:", e);
+                select.innerHTML = '<option value="">Error al cargar base de datos</option>';
+            }
+        }
+
+        // Función de Análisis Automático Inteligente
+        window.ejecutarAnalisisAutomatico = function() {
+            const p1Nom = nombresIntegrantes.p1;
+            const p2Nom = nombresIntegrantes.p2;
+
+            const p1Exp = document.getElementById('p1-expectativas').value.trim();
+            const p1Des = document.getElementById('p1-deseos').value.trim();
+            const p1Dem = document.getElementById('p1-demandas').value.trim();
+            const p1Int = document.getElementById('p1-intencion').value;
+
+            const p2Exp = document.getElementById('p2-expectativas').value.trim();
+            const p2Des = document.getElementById('p2-deseos').value.trim();
+            const p2Dem = document.getElementById('p2-demandas').value.trim();
+            const p2Int = document.getElementById('p2-intencion').value;
+
+            if (!p1Exp || !p2Exp) {
+                alert("Por favor complete al menos las expectativas de ambos integrantes antes de ejecutar el análisis automático.");
+                return;
+            }
+
+            let analisisIntencion = "";
+            if (p1Int === p2Int) {
+                analisisIntencion = `• **Intención Vincular Convergente:** Ambos integrantes coinciden en apostar por "${p1Int}", lo cual otorga una base operativa sólida para el encuadre focalizado.`;
+            } else {
+                analisisIntencion = `• **Asimetría Crítica de Intenciones:** Se registra una disonancia fundamental. ${p1Nom} manifiesta "${p1Int}", mientras que ${p2Nom} se posiciona en "${p2Int}". Este vector de divergencia constituye el nudo conflictivo inicial prioritario a abordar en el encuadre.`;
+            }
+
+            const textoSintesis = `1. ANÁLISIS DE INTENCIONES:\n${analisisIntencion}\n\n` +
+                `2. ARTICULACIÓN DE DEMANDAS CRUZADAS:\n` +
+                `• Demanda de ${p1Nom} hacia ${p2Nom}: "${p1Dem || 'No especificada'}"\n` +
+                `• Demanda de ${p2Nom} hacia ${p1Nom}: "${p2Dem || 'No especificada'}"\n\n` +
+                `3. CONVERGENCIA DE DESEOS Y EXPECTATIVAS:\n` +
+                `• ${p1Nom} orienta su expectativa hacia: "${p1Exp}" (Deseo: ${p1Des || 'N/D'}).\n` +
+                `• ${p2Nom} orienta su expectativa hacia: "${p2Exp}" (Deseo: ${p2Des || 'N/D'}).\n\n` +
+                `4. IMPLICANCIA CLÍNICA (Foco Inicial):\n` +
+                `El conflicto nuclear parece organizarse en la colisión entre las demandas recíprocas y las expectativas terapéuticas individuales. Se requiere un trabajo de nominación afectiva y desarticulación de mandatos cruzados para habilitar un espacio transicional operativo.`;
+
+            document.getElementById('analisis-convergencia').value = textoSintesis;
+        };
+
+        // Guardar Primera Entrevista en Firestore
+        window.guardarPrimeraEntrevista = async function() {
+            const parejaId = document.getElementById('select-pareja').value;
+            if (!parejaId) {
+                alert("Por favor seleccione una pareja.");
+                return;
+            }
+
+            const dataPareja = parejasMap[parejaId];
+            const nombrePareja = `${dataPareja.p1.nombre} & ${dataPareja.p2.nombre}`;
+
+            const record = {
+                parejaId,
+                nombrePareja,
+                p1: {
+                    nombre: dataPareja.p1.nombre,
+                    expectativas: document.getElementById('p1-expectativas').value,
+                    deseos: document.getElementById('p1-deseos').value,
+                    demandas: document.getElementById('p1-demandas').value,
+                    intencion: document.getElementById('p1-intencion').value
+                },
+                p2: {
+                    nombre: dataPareja.p2.nombre,
+                    expectativas: document.getElementById('p2-expectativas').value,
+                    deseos: document.getElementById('p2-deseos').value,
+                    demandas: document.getElementById('p2-demandas').value,
+                    intencion: document.getElementById('p2-intencion').value
+                },
+                analisisConvergencia: document.getElementById('analisis-convergencia').value,
+                fecha: document.getElementById('entrevista-fecha').value,
+                terapeuta_id: terapeutaActual,
+                timestamp: new Date()
+            };
+
+            try {
+                await addDoc(collection(db, "primeras_entrevistas"), record);
+                alert("Primera entrevista registrada con éxito.");
+                document.getElementById('prim-ent-form').reset();
+                document.getElementById('entrevista-fecha').valueAsDate = new Date();
+                cargarHistorialEntrevistas();
+            } catch (e) {
+                console.error("Error al guardar:", e);
+                alert("Error al conectar con la base de datos.");
+            }
+        };
+
+        // Cargar Historial con filtrado por terapeuta y ordenamiento local
+        async function cargarHistorialEntrevistas() {
+            const container = document.getElementById('historial-entrevistas');
+            if (!container) return;
+
+            container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">Cargando entrevistas...</p>';
+
+            try {
+                const q = query(collection(db, "primeras_entrevistas"), where("terapeuta_id", "==", terapeutaActual));
+                const querySnapshot = await getDocs(q);
+                container.innerHTML = '';
+
+                if (querySnapshot.empty) {
+                    container.innerHTML = '<p style="color: var(--text-muted); font-size: 0.85rem;">No se registran primeras entrevistas.</p>';
+                    return;
+                }
+
+                let entrevistas = [];
+                querySnapshot.forEach((docSnap) => {
+                    entrevistas.push(docSnap.data());
+                });
+
+                // Ordenamiento local por fecha descendente
+                entrevistas.sort((a, b) => (b.fecha || "").localeCompare(a.fecha || ""));
+
+                entrevistas.forEach((data) => {
+                    container.innerHTML += `
+                        <div class="history-item">
+                            <div class="history-header">
+                                <span>Pareja: ${data.nombrePareja}</span>
+                                <span>Fecha: ${data.fecha}</span>
+                            </div>
+                            <div class="history-grid">
+                                <div class="history-box">
+                                    <strong>${data.p1.nombre}</strong><br>
+                                    <small><strong>Intención:</strong> ${data.p1.intencion}</small><br>
+                                    <p style="margin-top:0.4rem;"><strong>Expectativa:</strong> ${data.p1.expectativas}</p>
+                                    <p><strong>Deseo:</strong> ${data.p1.deseos}</p>
+                                    <p><strong>Demanda al otro:</strong> ${data.p1.demandas}</p>
+                                </div>
+                                <div class="history-box">
+                                    <strong>${data.p2.nombre}</strong><br>
+                                    <small><strong>Intención:</strong> ${data.p2.intencion}</small><br>
+                                    <p style="margin-top:0.4rem;"><strong>Expectativa:</strong> ${data.p2.expectativas}</p>
+                                    <p><strong>Deseo:</strong> ${data.p2.deseos}</p>
+                                    <p><strong>Demanda al otro:</strong> ${data.p2.demandas}</p>
+                                </div>
+                            </div>
+                            <div style="background: #fffbeb; padding: 0.85rem; border-radius: 6px; border: 1px solid #fcd34d; font-size: 0.85rem; white-space: pre-line;">
+                                <strong>Síntesis de Convergencia / Análisis Automático:</strong><br>
+                                ${data.analisisConvergencia}
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (e) {
+                console.error("Error al cargar historial:", e);
+                container.innerHTML = '<p style="color: #dc2626; font-size: 0.85rem;">Error al recuperar el historial.</p>';
+            }
+        }
+    </script>
+</body>
+</html>

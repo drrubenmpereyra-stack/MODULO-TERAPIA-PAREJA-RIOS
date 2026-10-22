@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación Final y Marcha del Proceso (Eval 2) - Clínica de la Convergencia</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e3a8a;
+            --accent-color: #d97706;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --border-focus: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-elevated);
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        input, select, textarea {
+            padding: 0.75rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background-color: #f8fafc;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            background-color: var(--card-bg);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .rubrica-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+            font-size: 0.85rem;
+        }
+
+        .rubrica-table th, .rubrica-table td {
+            border: 1px solid var(--border-color);
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        .rubrica-table th {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .rubrica-table tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        .criterio-title {
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+
+        .criterio-desc {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        .actions-bar {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--primary-color);
+        }
+
+        .btn-accent {
+            background: var(--accent-color);
+        }
+        .btn-accent:hover {
+            background: #b45309;
+        }
+
+        .results-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .results-container, .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card-box {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .card-box h3 {
+            font-size: 1rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .semaforo-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .semaforo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .semaforo-verde { background-color: #d1fae5; color: #065f46; border-left: 5px solid var(--success-color); }
+        .semaforo-amarillo { background-color: #fef3c7; color: #92400e; border-left: 5px solid var(--warning-color); }
+        .semaforo-rojo { background-color: #fee2e2; color: #991b1b; border-left: 5px solid var(--danger-color); }
+
+        .informe-box {
+            background: #f8fafc;
+            border: 1px dashed var(--border-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            line-height: 1.5;
+            color: #334155;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .history-table th, .history-table td {
+            border: 1px solid var(--border-color);
+            padding: 8px 10px;
+            text-align: left;
+        }
+
+        .history-table th {
+            background-color: #e2e8f0;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Evaluación de Cierre y Marcha del Proceso Terapéutico (Eval 2)</h2>
+        <p class="subtitle">Clínica de la Convergencia — Rúbrica Operativa del Terapeuta</p>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="eval2-pareja">Seleccionar Pareja / Pacientes</label>
+                <select id="eval2-pareja">
+                    <option value="">Cargando parejas...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="eval2-momento">Instancia de Evaluación</label>
+                <select id="eval2-momento">
+                    <option value="Evaluación Temprana (Sesión 4-6)">Evaluación Temprana (Sesión 4-6)</option>
+                    <option value="Evaluación Intermedia (Sesión 10-12)">Evaluación Intermedia (Sesión 10-12)</option>
+                    <option value="Evaluación de Cierre Parcial">Evaluación de Cierre Parcial</option>
+                </select>
+            </div>
+        </div>
+
+        <table class="rubrica-table">
+            <thead>
+                <tr>
+                    <th style="width: 50%;">Criterio Clínico Convergente</th>
+                    <th style="width: 50%;">Calificación del Terapeuta (1 a 5)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="criterio-title">1. Disminución de la Reactividad Defensiva</div>
+                        <div class="criterio-desc">Capacidad para suspender ataques simétricos y tolerar la escucha sin contraatacar de inmediato.</div>
+                    </td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-eval2" data-criterio="Reactividad Defensiva"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="criterio-title">2. Aceptación de la Tercera Posición (Focalización)</div>
+                        <div class="criterio-desc">Reconocimiento del encuadre analítico y capacidad de mirar el conflicto vincular desde una perspectiva externa.</div>
+                    </td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-eval2" data-criterio="Tercera Posición"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="criterio-title">3. Flexibilización de Guiones Cruzados</div>
+                        <div class="criterio-desc">Cuestionamiento activo de los roles complementarios rígidos (ej: hiperresponsable / desentendido).</div>
+                    </td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-eval2" data-criterio="Guiones Cruzados"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="criterio-title">4. Inicio de Nominación Afectiva Real</div>
+                        <div class="criterio-desc">Transición de la queja persecutoria abstracta a la expresión de vulnerabilidad y afectos primarios.</div>
+                    </td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-eval2" data-criterio="Nominación Afectiva"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="form-grid" style="margin-bottom: 1.5rem;">
+            <div class="form-group full-width">
+                <label for="eval2-observaciones">Observaciones Clínicas del Terapeuta</label>
+                <textarea id="eval2-observaciones" rows="3" placeholder="Registre notas sobre resistencias, avances o nudos estructurales observados..."></textarea>
+            </div>
+        </div>
+
+        <div class="actions-bar">
+            <button class="btn" onclick="window.calcularPuntajeEval2()">1. Calcular Puntaje</button>
+            <button class="btn btn-accent" onclick="window.graficarSemaforoEval2()">2. Graficar Semáforos</button>
+            <button class="btn" onclick="window.generarInformeEval2()">3. Generar Informe</button>
+            <button class="btn btn-accent" onclick="window.guardarEval2Firestore()">4. Guardar en Base de Datos</button>
+        </div>
+
+        <div class="results-container">
+            <div class="card-box">
+                <h3>Valuación Semafórica por Criterio</h3>
+                <div id="semaforo-eval2-output" class="semaforo-grid">
+                    <span style="color:var(--text-muted); font-style:italic;">Pulse "Graficar Semáforos"...</span>
+                </div>
+                <div style="margin-top: 1.5rem;">
+                    <canvas id="chartEval2" style="max-height: 220px;"></canvas>
+                </div>
+            </div>
+
+            <div class="card-box">
+                <h3>Informe Clínico Estructurado</h3>
+                <div id="informe-eval2-output" class="informe-box">El informe aparecerá aquí...</div>
+            </div>
+        </div>
+
+        <div class="card-box" style="margin-top: 2rem;">
+            <h3>Historial de Evaluaciones Finales (Eval 2 - Registradas en Firestore)</h3>
+            <div style="overflow-x: auto;">
+                <table class="history-table" id="tabla-historial-eval2">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Pareja</th>
+                            <th>Instancia</th>
+                            <th>Puntaje</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Cargando historial...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAlP3ApO4-HdHHPdhyfgrhzibK6s-PIIjs",
+            authDomain: "modulo-terapia-pareja.firebaseapp.com",
+            projectId: "modulo-terapia-pareja",
+            storageBucket: "modulo-terapia-pareja.firebasestorage.app",
+            messagingSenderId: "856746891223",
+            appId: "1:856746891223:web:7fe119aaa6ce42a2ff1d92"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const terapeutaActual = localStorage.getItem("terapeuta_id") || "GRIOS";
+
+        let chartInstanceEval2 = null;
+        let ultimosDatosEval2 = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarParejasSelector();
+            cargarHistorialEval2();
+        });
+
+        async function cargarParejasSelector() {
+            const select = document.getElementById('eval2-pareja');
+            if (!select) return;
+
+            try {
+                const q = query(collection(db, "parejas_pacientes"), where("terapeuta_id", "==", terapeutaActual));
+                const querySnapshot = await getDocs(q);
+                
+                select.innerHTML = '<option value="">Seleccione una pareja registrada...</option>';
+                let total = 0;
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    if (data.p1 && data.p2) {
+                        const parejaNombre = `${data.p1.nombre} & ${data.p2.nombre}`;
+                        const opt = document.createElement('option');
+                        opt.value = parejaNombre;
+                        opt.textContent = parejaNombre;
+                        select.appendChild(opt);
+                        total++;
+                    }
+                });
+
+                if (total === 0) {
+                    select.innerHTML = '<option value="">No hay parejas registradas</option>';
+                }
+            } catch (e) {
+                console.error("Error al cargar parejas en eval_2:", e);
+                select.innerHTML = '<option value="">Error al cargar base de datos</option>';
+            }
+        }
+
+        window.calcularPuntajeEval2 = function() {
+            const inputs = document.querySelectorAll('.score-eval2');
+            let suma = 0;
+            let detalles = [];
+
+            inputs.forEach(input => {
+                const criterio = input.getAttribute('data-criterio');
+                const val = parseFloat(input.value) || 0;
+                suma += val;
+                detalles.push({ criterio, val });
+            });
+
+            const promedio = (suma / inputs.length).toFixed(2);
+            ultimosDatosEval2 = { promedio, detalles };
+            alert(`Puntaje Promedio General: ${promedio} / 5.00`);
+            return ultimosDatosEval2;
+        };
+
+        window.graficarSemaforoEval2 = function() {
+            const datos = window.calcularPuntajeEval2();
+            if (!datos) return;
+
+            const contenedor = document.getElementById('semaforo-eval2-output');
+            contenedor.innerHTML = '';
+            let labels = [];
+            let valores = [];
+            let colores = [];
+
+            datos.detalles.forEach(item => {
+                labels.push(item.criterio);
+                valores.push(item.val);
+
+                let clase = '';
+                let texto = '';
+                if (item.val >= 4.0) {
+                    clase = 'semaforo-verde'; texto = `Óptimo (${item.val})`; colores.push('#10b981');
+                } else if (item.val >= 2.5) {
+                    clase = 'semaforo-amarillo'; texto = `En Proceso (${item.val})`; colores.push('#f59e0b');
+                } else {
+                    clase = 'semaforo-rojo'; texto = `Crítico (${item.val})`; colores.push('#ef4444');
+                }
+
+                const div = document.createElement('div');
+                div.className = `semaforo-item ${clase}`;
+                div.innerHTML = `<span>${item.criterio}</span><span>${texto}</span>`;
+                contenedor.appendChild(div);
+            });
+
+            const ctx = document.getElementById('chartEval2').getContext('2d');
+            if (chartInstanceEval2) chartInstanceEval2.destroy();
+
+            chartInstanceEval2 = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{ data: valores, backgroundColor: colores, borderWidth: 1 }]
+                },
+                options: {
+                    responsive: true,
+                    scales: { y: { beginAtZero: true, max: 5 } },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        };
+
+        window.generarInformeEval2 = function() {
+            const datos = window.calcularPuntajeEval2();
+            if (!datos) return;
+
+            const pareja = document.getElementById('eval2-pareja').value.trim() || "Sin especificar";
+            const momento = document.getElementById('eval2-momento').value;
+            const obs = document.getElementById('eval2-observaciones').value.trim();
+            const fecha = new Date().toLocaleDateString();
+
+            let informe = `==================================================\n`;
+            informe += `CLÍNICA DE LA CONVERGENCIA - INFORME EVAL 2\n`;
+            informe += `==================================================\n`;
+            informe += `Fecha: ${fecha}\n`;
+            informe += `Pareja: ${pareja}\n`;
+            informe += `Instancia: ${momento}\n`;
+            informe += `Promedio Global: ${datos.promedio} / 5.00\n\n`;
+            informe += `DETALLE DE CRITERIOS:\n`;
+
+            datos.detalles.forEach(item => {
+                let estado = item.val >= 4.0 ? "LOGRADO" : (item.val >= 2.5 ? "EN PROCESO" : "CRÍTICO");
+                informe += `- ${item.criterio}: ${item.val} [${estado}]\n`;
+            });
+
+            informe += `\nOBSERVACIONES DEL TERAPEUTA:\n${obs || "Sin observaciones."}\n`;
+            informe += `==================================================\n`;
+
+            document.getElementById('informe-eval2-output').textContent = informe;
+            return informe;
+        };
+
+        window.guardarEval2Firestore = async function() {
+            const pareja = document.getElementById('eval2-pareja').value.trim();
+            if (!pareja) { alert("Seleccione una pareja."); return; }
+
+            const momento = document.getElementById('eval2-momento').value;
+            const informe = window.generarInformeEval2();
+            const promedio = ultimosDatosEval2 ? ultimosDatosEval2.promedio : "0.00";
+
+            try {
+                await addDoc(collection(db, "evaluacion_2"), {
+                    pareja, 
+                    momento, 
+                    promedio, 
+                    informe, 
+                    terapeuta_id: terapeutaActual,
+                    fecha: new Date()
+                });
+                alert("Evaluación 2 guardada con éxito.");
+                cargarHistorialEval2();
+            } catch (e) {
+                console.error("Error al guardar eval 2:", e);
+                alert("Error al guardar en la base de datos.");
+            }
+        };
+
+        async function cargarHistorialEval2() {
+            const tbody = document.querySelector('#tabla-historial-eval2 tbody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            try {
+                const q = query(
+                    collection(db, "evaluacion_2"), 
+                    where("terapeuta_id", "==", terapeutaActual)
+                );
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted);">Sin registros aún.</td></tr>`;
+                    return;
+                }
+
+                let evaluaciones = [];
+                querySnapshot.forEach((docSnap) => {
+                    evaluaciones.push(docSnap.data());
+                });
+
+                evaluaciones.sort((a, b) => {
+                    const fechaA = a.fecha && a.fecha.toDate ? a.fecha.toDate() : new Date(0);
+                    const fechaB = b.fecha && b.fecha.toDate ? b.fecha.toDate() : new Date(0);
+                    return fechaB - fechaA;
+                });
+
+                evaluaciones.forEach((data) => {
+                    const fechaStr = data.fecha && data.fecha.toDate ? data.fecha.toDate().toLocaleDateString() : "";
+                    let estado = parseFloat(data.promedio) >= 4.0 ? "Consolidado" : (parseFloat(data.promedio) >= 2.5 ? "En Marcha" : "Crítico");
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${fechaStr}</td>
+                            <td><b>${data.pareja}</b></td>
+                            <td>${data.momento}</td>
+                            <td>${data.promedio} / 5</td>
+                            <td>${estado}</td>
+                        </tr>
+                    `;
+                });
+            } catch (e) {
+                console.error("Error al cargar historial eval 2:", e);
+            }
+        }
+    </script>
+</body>
+</html>

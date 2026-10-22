@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación Inmediata 1 (Eval 1) - Clínica de la Convergencia</title>
+    <!-- Chart.js para visualización en gráfico de barras / semáforo -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e3a8a;
+            --accent-color: #d97706;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --border-focus: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-elevated);
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        input, select, textarea {
+            padding: 0.75rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background-color: #f8fafc;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            background-color: var(--card-bg);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .rubrica-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+            font-size: 0.85rem;
+        }
+
+        .rubrica-table th, .rubrica-table td {
+            border: 1px solid var(--border-color);
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        .rubrica-table th {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .rubrica-table tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        .criterio-title {
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+
+        .criterio-desc {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        .actions-bar {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--primary-color);
+        }
+
+        .btn-accent {
+            background: var(--accent-color);
+        }
+        .btn-accent:hover {
+            background: #b45309;
+        }
+
+        .results-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .results-container, .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card-box {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .card-box h3 {
+            font-size: 1rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .semaforo-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .semaforo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .semaforo-verde { background-color: #d1fae5; color: #065f46; border-left: 5px solid var(--success-color); }
+        .semaforo-amarillo { background-color: #fef3c7; color: #92400e; border-left: 5px solid var(--warning-color); }
+        .semaforo-rojo { background-color: #fee2e2; color: #991b1b; border-left: 5px solid var(--danger-color); }
+
+        .informe-box {
+            background: #f8fafc;
+            border: 1px dashed var(--border-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            line-height: 1.5;
+            color: #334155;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .history-table th, .history-table td {
+            border: 1px solid var(--border-color);
+            padding: 8px 10px;
+            text-align: left;
+        }
+
+        .history-table th {
+            background-color: #e2e8f0;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Evaluación Inmediata 1 (Eval 1)</h2>
+        <p class="subtitle">Clínica de la Convergencia — Perspectiva Vincular de los Pacientes</p>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="eval1-pareja">Seleccionar Pareja / Pacientes</label>
+                <select id="eval1-pareja">
+                    <option value="">Cargando parejas...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="eval1-momento">Momento del Proceso</label>
+                <select id="eval1-momento">
+                    <option value="Marcha Inicial">Marcha Inicial</option>
+                    <option value="Evaluación Temprana">Evaluación Temprana</option>
+                    <option value="Marcha Intermedia">Marcha Intermedia</option>
+                </select>
+            </div>
+        </div>
+
+        <p style="font-size:0.85rem; font-weight:600; margin-bottom:1rem; color:var(--secondary-color);">
+            Califique de 1 (Muy Desfavorable / Nulo) a 5 (Muy Favorable / Logrado) según la percepción de cada miembro:
+        </p>
+
+        <table class="rubrica-table">
+            <thead>
+                <tr>
+                    <th style="width: 40%;">Criterio de Análisis Vincular</th>
+                    <th style="width: 30%;">Integrante A (Puntaje 1-5)</th>
+                    <th style="width: 30%;">Integrante B (Puntaje 1-5)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="criterio-title">1. Nominación Afectiva y Conciencia Emocional</div>
+                        <div class="criterio-desc">Capacidad para identificar, poner en palabras y validar los afectos propios y del otro sin desbordes.</div>
+                    </td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-a" data-criterio="Nominación Afectiva"></td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-b" data-criterio="Nominación Afectiva"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="criterio-title">2. Regulación del Estrés y Tensión Vincular</div>
+                        <div class="criterio-desc">Habilidad para contener la reactividad defensiva, disminuir escaladas simétricas y recuperar la calma.</div>
+                    </td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-a" data-criterio="Regulación del Estrés"></td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-b" data-criterio="Regulación del Estrés"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="criterio-title">3. Flexibilidad en los Guiones Vinculares</div>
+                        <div class="criterio-desc">Superación de roles rígidos o complementariedades patológicas estancadas; apertura a nuevas posiciones.</div>
+                    </td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-a" data-criterio="Flexibilidad Vincular"></td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-b" data-criterio="Flexibilidad Vincular"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="criterio-title">4. Reconsolidación de Memorias y Ressignificación</div>
+                        <div class="criterio-desc">Capacidad de revisar escenas críticas del pasado común transformando su sentido afectivo actual.</div>
+                    </td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-a" data-criterio="Reconsolidación de Memorias"></td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-b" data-criterio="Reconsolidación de Memorias"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="criterio-title">5. Construcción de Proyectos y Autonomía Vincular</div>
+                        <div class="criterio-desc">Grado de cooperación actual, disfrute compartido y respeto por la individuación de cada miembro.</div>
+                    </td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-a" data-criterio="Proyectos y Autonomía"></td>
+                    <td><input type="number" min="1" max="5" value="3" class="score-b" data-criterio="Proyectos y Autonomía"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="form-grid" style="margin-bottom: 1.5rem;">
+            <div class="form-group full-width">
+                <label for="eval1-observaciones">Observaciones Cualitativas y Síntesis de la Pareja</label>
+                <textarea id="eval1-observaciones" rows="3" placeholder="Describa los logros percibidos, nudos pendientes o reflexiones iniciales aportadas por la pareja..."></textarea>
+            </div>
+        </div>
+
+        <div class="actions-bar">
+            <button class="btn" onclick="calcularPuntajeEval1()">1. Calcular Puntaje</button>
+            <button class="btn btn-accent" onclick="graficarSemaforoEval1()">2. Graficar Semáforos</button>
+            <button class="btn" onclick="generarInformeEval1()">3. Generar Informe</button>
+            <button class="btn btn-accent" onclick="guardarEval1Firestore()">4. Guardar en Base de Datos</button>
+        </div>
+
+        <div class="results-container">
+            <div class="card-box">
+                <h3>Valuación Semafórica por Criterio (Promedio Pareja)</h3>
+                <div id="semaforo-output" class="semaforo-grid">
+                    <span style="color:var(--text-muted); font-style:italic;">Pulse "Graficar Semáforos" para procesar los datos.</span>
+                </div>
+                <div style="margin-top: 1.5rem;">
+                    <canvas id="chartEval1"

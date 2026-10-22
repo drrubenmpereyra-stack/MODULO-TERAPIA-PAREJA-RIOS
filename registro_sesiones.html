@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Sesiones - Clínica de la Convergencia</title>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e3a8a;
+            --accent-color: #d97706;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --border-focus: #3b82f6;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-elevated);
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        input, select, textarea {
+            padding: 0.75rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background-color: #f8fafc;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            background-color: var(--card-bg);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .mic-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-mic {
+            background: #e2e8f0;
+            color: var(--primary-color);
+            border: 1.5px solid var(--border-color);
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s;
+        }
+
+        .btn-mic:hover {
+            background: #cbd5e1;
+        }
+
+        .btn-mic.recording {
+            background: #fee2e2;
+            color: var(--danger-color);
+            border-color: #fecaca;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .recording-status {
+            font-size: 0.75rem;
+            color: var(--danger-color);
+            font-weight: 600;
+            display: none;
+        }
+
+        .actions-bar {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--primary-color);
+        }
+
+        .btn-accent {
+            background: var(--accent-color);
+        }
+        .btn-accent:hover {
+            background: #b45309;
+        }
+
+        .card-box {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .card-box h3 {
+            font-size: 1rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .history-table th, .history-table td {
+            border: 1px solid var(--border-color);
+            padding: 8px 10px;
+            text-align: left;
+        }
+
+        .history-table th {
+            background-color: #e2e8f0;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Registro Evolutivo de Sesiones</h2>
+        <p class="subtitle">Clínica de la Convergencia — Bitácora Terapéutica y Foco Vincular</p>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="ses-pareja">Seleccionar Pareja / Pacientes</label>
+                <select id="ses-pareja">
+                    <option value="">Cargando parejas...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="ses-numero">Nro. de Sesión</label>
+                <input type="number" id="ses-numero" min="1" value="1" placeholder="Ej: 1">
+            </div>
+            <div class="form-group">
+                <label for="ses-fecha">Fecha de la Sesión</label>
+                <input type="date" id="ses-fecha">
+            </div>
+
+            <div class="form-group full-width">
+                <div class="mic-container">
+                    <label for="ses-puntos" style="margin-bottom:0;">Puntos Centrales Trabajados en la Sesión</label>
+                    <div>
+                        <span id="mic-status" class="recording-status">🎙️ Escuchando... Hable ahora</span>
+                        <button type="button" class="btn-mic" id="btn-toggle-mic" onclick="window.toggleDictadoVoz()">
+                            🎤 Dictar por Micrófono
+                        </button>
+                    </div>
+                </div>
+                <textarea id="ses-puntos" rows="5" placeholder="Describa los movimientos de nominación afectiva, regulación de tensión o nudos vinculares trabajados..."></textarea>
+            </div>
+        </div>
+
+        <div class="actions-bar">
+            <button class="btn btn-accent" onclick="window.guardarSesionFirestore()">Guardar Sesión en Base de Datos</button>
+        </div>
+
+        <div class="card-box" style="margin-top: 2rem;">
+            <h3>Historial de Sesiones Registradas</h3>
+            <div style="overflow-x: auto;">
+                <table class="history-table" id="tabla-historial-sesiones">
+                    <thead>
+                        <tr>
+                            <th style="width: 15%;">Fecha Sesión</th>
+                            <th style="width: 15%;">Pareja</th>
+                            <th style="width: 10%;">Nro.</th>
+                            <th style="width: 60%;">Puntos Centrales Trabajados</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="4" style="text-align:center; color:var(--text-muted);">Cargando historial...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase y Lógica del Módulo -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Configuración de la nueva base de datos aislada
+        const firebaseConfig = {
+            apiKey: "AIzaSyAlP3ApO4-HdHHPdhyfgrhzibK6s-PIIjs",
+            authDomain: "modulo-terapia-pareja.firebaseapp.com",
+            projectId: "modulo-terapia-pareja",
+            storageBucket: "modulo-terapia-pareja.firebasestorage.app",
+            messagingSenderId: "856746891223",
+            appId: "1:856746891223:web:7fe119aaa6ce42a2ff1d92"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Obtener el terapeuta activo de la sesión
+        const terapeutaActual = localStorage.getItem("terapeuta_id") || "GRIOS";
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date().toISOString().split('T')[0];
+            const dateInput = document.getElementById('ses-fecha');
+            if (dateInput) dateInput.value = today;
+
+            cargarParejasSelector();
+            cargarHistorialSesiones();
+        });
+
+        // Carga de parejas filtradas por terapeuta_id
+        async function cargarParejasSelector() {
+            const select = document.getElementById('ses-pareja');
+            if (!select) return;
+
+            try {
+                const q = query(collection(db, "parejas_pacientes"), where("terapeuta_id", "==", terapeutaActual));
+                const querySnapshot = await getDocs(q);
+
+                select.innerHTML = '<option value="">Seleccione una pareja registrada...</option>';
+                let total = 0;
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    if (data.p1 && data.p2) {
+                        const parejaNombre = `${data.p1.nombre} & ${data.p2.nombre}`;
+                        const opt = document.createElement('option');
+                        opt.value = parejaNombre;
+                        opt.textContent = parejaNombre;
+                        select.appendChild(opt);
+                        total++;
+                    }
+                });
+
+                if (total === 0) {
+                    select.innerHTML = '<option value="">No hay parejas registradas</option>';
+                }
+            } catch (e) {
+                console.error("Error al cargar parejas:", e);
+                select.innerHTML = '<option value="">Error al cargar parejas</option>';
+            }
+        }
+
+        let recognition = null;
+        let isRecording = false;
+
+        window.toggleDictadoVoz = function() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                alert("Su navegador no soporta reconocimiento de voz.");
+                return;
+            }
+
+            const btnMic = document.getElementById('btn-toggle-mic');
+            const micStatus = document.getElementById('mic-status');
+            const textarea = document.getElementById('ses-puntos');
+
+            if (!isRecording) {
+                recognition = new SpeechRecognition();
+                recognition.lang = 'es-AR';
+                recognition.continuous = true;
+                recognition.interimResults = true;
+
+                recognition.onstart = function() {
+                    isRecording = true;
+                    btnMic.classList.add('recording');
+                    btnMic.textContent = '⏹️ Detener Micrófono';
+                    micStatus.style.display = 'inline';
+                };
+
+                recognition.onresult = function(event) {
+                    let transcript = '';
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        transcript += event.results[i][0].transcript;
+                    }
+                    textarea.value += (textarea.value ? ' ' : '') + transcript;
+                };
+
+                recognition.onerror = function() { detenerDictado(); };
+                recognition.onend = function() {
+                    if (isRecording) { try { recognition.start(); } catch(e) { detenerDictado(); } }
+                };
+
+                recognition.start();
+            } else {
+                detenerDictado();
+            }
+        };
+
+        function detenerDictado() {
+            isRecording = false;
+            if (recognition) { try { recognition.stop(); } catch(e) {} }
+            const btnMic = document.getElementById('btn-toggle-mic');
+            const micStatus = document.getElementById('mic-status');
+            if (btnMic) {
+                btnMic.classList.remove('recording');
+                btnMic.textContent = '🎤 Dictar por Micrófono';
+            }
+            if (micStatus) micStatus.style.display = 'none';
+        }
+
+        window.guardarSesionFirestore = async function() {
+            const pareja = document.getElementById('ses-pareja').value.trim();
+            const numero = document.getElementById('ses-numero').value.trim();
+            const fechaSesion = document.getElementById('ses-fecha').value;
+            const puntos = document.getElementById('ses-puntos').value.trim();
+
+            if (!pareja) { alert("Por favor seleccione una pareja."); return; }
+            if (!puntos) { alert("Por favor ingrese o dicte los puntos centrales."); return; }
+
+            if (isRecording) detenerDictado();
+
+            try {
+                await addDoc(collection(db, "registro_sesiones"), {
+                    pareja,
+                    numeroSesion: numero || "1",
+                    fechaSesion: fechaSesion || new Date().toISOString().split('T')[0],
+                    puntosCentrales: puntos,
+                    terapeuta_id: terapeutaActual,
+                    fechaRegistro: new Date()
+                });
+
+                alert("Sesión registrada exitosamente.");
+                document.getElementById('ses-puntos').value = '';
+                document.getElementById('ses-numero').value = parseInt(numero || 1) + 1;
+                cargarHistorialSesiones();
+            } catch (e) {
+                console.error("Error al guardar sesión:", e);
+                alert("Error al guardar en la base de datos.");
+            }
+        };
+
+        async function cargarHistorialSesiones() {
+            const tbody = document.querySelector('#tabla-historial-sesiones tbody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            try {
+                // Consulta filtrada por terapeuta_id
+                const q = query(collection(db, "registro_sesiones"), where("terapeuta_id", "==", terapeutaActual));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-muted);">No hay sesiones registradas aún.</td></tr>`;
+                    return;
+                }
+
+                let sesiones = [];
+                querySnapshot.forEach((docSnap) => {
+                    sesiones.push(docSnap.data());
+                });
+
+                // Ordenamiento local por fecha descendente
+                sesiones.sort((a, b) => (b.fechaSesion || "").localeCompare(a.fechaSesion || ""));
+
+                sesiones.forEach((data) => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><b>${data.fechaSesion}</b></td>
+                            <td>${data.pareja}</td>
+                            <td>Sesión N° ${data.numeroSesion}</td>
+                            <td style="white-space: pre-wrap; line-height: 1.4;">${data.puntosCentrales}</td>
+                        </tr>
+                    `;
+                });
+            } catch (e) {
+                console.error("Error cargando historial de sesiones:", e);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda Clínica - Clínica de la Convergencia</title>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e3a8a;
+            --accent-color: #d97706;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --border-focus: #3b82f6;
+            --success-color: #10b981;
+            --danger-color: #ef4444;
+            --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-elevated);
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        input, select, textarea {
+            padding: 0.75rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background-color: #f8fafc;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            background-color: var(--card-bg);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .actions-bar {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--primary-color);
+        }
+
+        .btn-accent {
+            background: var(--accent-color);
+        }
+        .btn-accent:hover {
+            background: #b45309;
+        }
+
+        .card-box {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .card-box h3 {
+            font-size: 1rem;
+            color: var(--primary-color);
+            margin-bottom: 1.0rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+        }
+
+        .history-table th, .history-table td {
+            border: 1px solid var(--border-color);
+            padding: 8px 10px;
+            text-align: left;
+        }
+
+        .history-table th {
+            background-color: #e2e8f0;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Agenda de Citas y Turnos Vinculares</h2>
+        <p class="subtitle">Clínica de la Convergencia — Programación y Gestión de Encuentros</p>
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="agenda-pareja">Seleccionar Pareja / Pacientes</label>
+                <select id="agenda-pareja">
+                    <option value="">Cargando parejas...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="agenda-fecha">Fecha del Turno</label>
+                <input type="date" id="agenda-fecha">
+            </div>
+            <div class="form-group">
+                <label for="agenda-hora">Hora del Turno</label>
+                <input type="time" id="agenda-hora">
+            </div>
+            <div class="form-group full-width">
+                <label for="agenda-motivo">Motivo o Notas del Encuentro</label>
+                <input type="text" id="agenda-motivo" placeholder="Ej: Entrevista de seguimiento, revisión de tareas...">
+            </div>
+        </div>
+
+        <div class="actions-bar">
+            <button class="btn btn-accent" onclick="guardarTurnoFirestore()">Agendar Turno en Base de Datos</button>
+        </div>
+
+        <div class="card-box" style="margin-top: 2rem;">
+            <h3>Agenda de Turnos Registrados</h3>
+            <div style="overflow-x: auto;">
+                <table class="history-table" id="tabla-historial-agenda">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">Fecha y Hora</th>
+                            <th style="width: 30%;">Pareja</th>
+                            <th style="width: 50%;">Motivo / Notas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="3" style="text-align:center; color:var(--text-muted);">Cargando agenda...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Configuración de la nueva base de datos aislada
+        const firebaseConfig = {
+            apiKey: "AIzaSyAlP3ApO4-HdHHPdhyfgrhzibK6s-PIIjs",
+            authDomain: "modulo-terapia-pareja.firebaseapp.com",
+            projectId: "modulo-terapia-pareja",
+            storageBucket: "modulo-terapia-pareja.firebasestorage.app",
+            messagingSenderId: "856746891223",
+            appId: "1:856746891223:web:7fe119aaa6ce42a2ff1d92"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Obtener el terapeuta activo de la sesión
+        const terapeutaActual = localStorage.getItem("terapeuta_id") || "GRIOS";
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date().toISOString().split('T')[0];
+            const dateInput = document.getElementById('agenda-fecha');
+            if (dateInput) dateInput.value = today;
+
+            cargarParejasSelector();
+            cargarHistorialAgenda();
+        });
+
+        async function cargarParejasSelector() {
+            const select = document.getElementById('agenda-pareja');
+            try {
+                // Consulta filtrada por terapeuta_id
+                const q = query(collection(db, "parejas_pacientes"), where("terapeuta_id", "==", terapeutaActual));
+                const querySnapshot = await getDocs(q);
+                
+                select.innerHTML = '<option value="">Seleccione una pareja registrada...</option>';
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    if (data.p1 && data.p2) {
+                        const parejaNombre = `${data.p1.nombre} & ${data.p2.nombre}`;
+                        const opt = document.createElement('option');
+                        opt.value = parejaNombre;
+                        opt.textContent = parejaNombre;
+                        select.appendChild(opt);
+                    }
+                });
+            } catch (e) {
+                console.error("Error al cargar parejas en agenda:", e);
+                select.innerHTML = '<option value="">Error al cargar parejas</option>';
+            }
+        }
+
+        window.guardarTurnoFirestore = async function() {
+            const pareja = document.getElementById('agenda-pareja').value.trim();
+            const fecha = document.getElementById('agenda-fecha').value;
+            const hora = document.getElementById('agenda-hora').value;
+            const motivo = document.getElementById('agenda-motivo').value.trim();
+
+            if (!pareja) { alert("Por favor seleccione una pareja."); return; }
+            if (!fecha || !hora) { alert("Por favor indique la fecha y hora del turno."); return; }
+
+            try {
+                await addDoc(collection(db, "agenda_turnos"), {
+                    pareja,
+                    fecha,
+                    hora,
+                    motivo: motivo || "Consulta general vincular",
+                    terapeuta_id: terapeutaActual,
+                    fechaCreacion: new Date()
+                });
+
+                alert("Turno agendado exitosamente.");
+                document.getElementById('agenda-motivo').value = '';
+                cargarHistorialAgenda();
+            } catch (e) {
+                console.error("Error al guardar turno:", e);
+                alert("Error al guardar en la base de datos.");
+            }
+        };
+
+        async function cargarHistorialAgenda() {
+            const tbody = document.querySelector('#tabla-historial-agenda tbody');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            try {
+                // Consulta filtrada por terapeuta_id para mostrar solo sus turnos
+                const q = query(
+                    collection(db, "agenda_turnos"), 
+                    where("terapeuta_id", "==", terapeutaActual)
+                );
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted);">No hay turnos agendados aún.</td></tr>`;
+                    return;
+                }
+
+                // Convertir a array y ordenar por fecha/hora en memoria
+                let turnos = [];
+                querySnapshot.forEach((docSnap) => {
+                    turnos.push(docSnap.data());
+                });
+
+                turnos.sort((a, b) => (a.fecha + a.hora).localeCompare(b.fecha + b.hora));
+
+                turnos.forEach((data) => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><b>${data.fecha}</b> a las <b>${data.hora} hs</b></td>
+                            <td>${data.pareja}</td>
+                            <td>${data.motivo}</td>
+                        </tr>
+                    `;
+                });
+            } catch (e) {
+                console.error("Error al cargar historial de agenda:", e);
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--danger-color);">Error al cargar los turnos.</td></tr>`;
+            }
+        }
+    </script>
+</body>
+</html>

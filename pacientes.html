@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Pacientes - Clínica de la Convergencia</title>
+    <style>
+        :root {
+            --primary-color: #0f172a;
+            --secondary-color: #1e3a8a;
+            --accent-color: #d97706;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --border-focus: #3b82f6;
+            --shadow-subtle: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-subtle);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.25rem;
+            margin-bottom: 1.25rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.4rem;
+            font-weight: 700;
+        }
+
+        h3 {
+            color: var(--secondary-color);
+            font-size: 0.95rem;
+            margin: 1rem 0 0.5rem 0;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .form-control {
+            margin-bottom: 0.75rem;
+        }
+
+        .form-control label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-control input, .form-control select {
+            width: 100%;
+            padding: 0.7rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            background-color: #f8fafc;
+        }
+
+        .form-control input:focus, .form-control select:focus {
+            outline: none;
+            border-color: var(--border-focus);
+            background-color: var(--card-bg);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.25rem;
+        }
+
+        .btn {
+            padding: 0.7rem 1.2rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-subtle);
+        }
+
+        .btn-registrar {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: #ffffff;
+        }
+
+        .btn-editar {
+            background-color: #0284c7;
+            color: #ffffff;
+            display: none;
+        }
+
+        .btn-eliminar {
+            background-color: #dc2626;
+            color: #ffffff;
+            display: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-elevated);
+            filter: brightness(1.1);
+        }
+
+        table.data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        table.data-table th, table.data-table td {
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.75rem;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        table.data-table th {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+        }
+
+        table.data-table tr {
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        table.data-table tr:hover {
+            background-color: #f8fafc;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card">
+            <h2>Registro y Gestión de Pareja Consultante</h2>
+            
+            <form id="pacientes-form">
+                <input type="hidden" id="pareja-id">
+
+                <!-- Paciente Pareja 1 -->
+                <h3>Paciente Pareja 1</h3>
+                <div class="form-grid">
+                    <div class="form-control">
+                        <label>Apellido y Nombre</label>
+                        <input type="text" id="p1-nombre" required placeholder="Ej: Pérez, Juan">
+                    </div>
+                    <div class="form-control">
+                        <label>Edad</label>
+                        <input type="number" id="p1-edad" required placeholder="Ej: 45">
+                    </div>
+                    <div class="form-control">
+                        <label>Sexo</label>
+                        <select id="p1-sexo">
+                            <option value="Masculino">Masculino</option>
+                            <option value="Femenino">Femenino</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="form-control">
+                        <label>Celular</label>
+                        <input type="text" id="p1-celular" placeholder="Ej: 3514000000">
+                    </div>
+                </div>
+
+                <!-- Paciente Pareja 2 -->
+                <h3>Paciente Pareja 2</h3>
+                <div class="form-grid">
+                    <div class="form-control">
+                        <label>Apellido y Nombre</label>
+                        <input type="text" id="p2-nombre" required placeholder="Ej: Gómez, María">
+                    </div>
+                    <div class="form-control">
+                        <label>Edad</label>
+                        <input type="number" id="p2-edad" required placeholder="Ej: 42">
+                    </div>
+                    <div class="form-control">
+                        <label>Sexo</label>
+                        <select id="p2-sexo">
+                            <option value="Femenino">Femenino</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="form-control">
+                        <label>Celular</label>
+                        <input type="text" id="p2-celular" placeholder="Ej: 3514111111">
+                    </div>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="btn-group">
+                    <button type="button" class="btn btn-registrar" id="btn-registrar" onclick="window.registrarPareja()">Registrar</button>
+                    <button type="button" class="btn btn-editar" id="btn-editar" onclick="window.actualizarPareja()">Actualizar</button>
+                    <button type="button" class="btn btn-eliminar" id="btn-eliminar" onclick="window.eliminarPareja()">Eliminar</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tabla de Registros -->
+        <div class="card">
+            <h2>Parejas Registradas en el Sistema</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Pareja 1 (Ap. y Nombre)</th>
+                        <th>Pareja 2 (Ap. y Nombre)</th>
+                        <th>Celulares</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-parejas">
+                    <!-- Datos cargados dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Script de Firebase Firestore -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAlP3ApO4-HdHHPdhyfgrhzibK6s-PIIjs",
+            authDomain: "modulo-terapia-pareja.firebaseapp.com",
+            projectId: "modulo-terapia-pareja",
+            storageBucket: "modulo-terapia-pareja.firebasestorage.app",
+            messagingSenderId: "856746891223",
+            appId: "1:856746891223:web:7fe119aaa6ce42a2ff1d92"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const terapeutaActual = localStorage.getItem("terapeuta_id") || "GRIOS";
+
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarParejas();
+        });
+
+        window.registrarPareja = async function() {
+            const p1 = {
+                nombre: document.getElementById('p1-nombre').value.trim(),
+                edad: document.getElementById('p1-edad').value.trim(),
+                sexo: document.getElementById('p1-sexo').value,
+                celular: document.getElementById('p1-celular').value.trim()
+            };
+            const p2 = {
+                nombre: document.getElementById('p2-nombre').value.trim(),
+                edad: document.getElementById('p2-edad').value.trim(),
+                sexo: document.getElementById('p2-sexo').value,
+                celular: document.getElementById('p2-celular').value.trim()
+            };
+
+            if (!p1.nombre || !p2.nombre) {
+                alert("Por favor complete los nombres de ambos integrantes.");
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, "parejas_pacientes"), {
+                    p1,
+                    p2,
+                    terapeuta_id: terapeutaActual,
+                    fecha: new Date()
+                });
+                alert("Pareja registrada con éxito.");
+                limpiarFormulario();
+                cargarParejas();
+            } catch (e) {
+                console.error("Error al registrar:", e);
+                alert("Error al conectar con la base de datos.");
+            }
+        };
+
+        window.actualizarPareja = async function() {
+            const id = document.getElementById('pareja-id').value;
+            if (!id) return;
+
+            const p1 = {
+                nombre: document.getElementById('p1-nombre').value.trim(),
+                edad: document.getElementById('p1-edad').value.trim(),
+                sexo: document.getElementById('p1-sexo').value,
+                celular: document.getElementById('p1-celular').value.trim()
+            };
+            const p2 = {
+                nombre: document.getElementById('p2-nombre').value.trim(),
+                edad: document.getElementById('p2-edad').value.trim(),
+                sexo: document.getElementById('p2-sexo').value,
+                celular: document.getElementById('p2-celular').value.trim()
+            };
+
+            if (!p1.nombre || !p2.nombre) {
+                alert("Por favor complete los nombres de ambos integrantes.");
+                return;
+            }
+
+            try {
+                await updateDoc(doc(db, "parejas_pacientes", id), { p1, p2 });
+                alert("Pareja actualizada correctamente.");
+                limpiarFormulario();
+                cargarParejas();
+            } catch (e) {
+                console.error("Error al actualizar:", e);
+                alert("Error al actualizar el registro.");
+            }
+        };
+
+        window.eliminarPareja = async function() {
+            const id = document.getElementById('pareja-id').value;
+            if (!id) return;
+
+            if (confirm("¿Está seguro que desea eliminar esta pareja del sistema?")) {
+                try {
+                    await deleteDoc(doc(db, "parejas_pacientes", id));
+                    alert("Pareja eliminada.");
+                    limpiarFormulario();
+                    cargarParejas();
+                } catch (e) {
+                    console.error("Error al eliminar:", e);
+                    alert("Error al eliminar el registro.");
+                }
+            }
+        };
+
+        async function cargarParejas() {
+            const tbody = document.getElementById('lista-parejas');
+            if (!tbody) return;
+            tbody.innerHTML = '';
+
+            try {
+                const q = query(collection(db, "parejas_pacientes"), where("terapeuta_id", "==", terapeutaActual));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted);">No hay parejas registradas.</td></tr>';
+                    return;
+                }
+
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const id = docSnap.id;
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${data.p1.nombre}</strong> (${data.p1.edad}a)<br><small>${data.p1.sexo}</small></td>
+                        <td><strong>${data.p2.nombre}</strong> (${data.p2.edad}a)<br><small>${data.p2.sexo}</small></td>
+                        <td>${data.p1.celular || '-'} / ${data.p2.celular || '-'}</td>
+                    `;
+                    tr.addEventListener('click', () => seleccionarPareja(id, data));
+                    tbody.appendChild(tr);
+                });
+            } catch (e) {
+                console.error("Error al cargar datos:", e);
+            }
+        }
+
+        function seleccionarPareja(id, data) {
+            document.getElementById('pareja-id').value = id;
+            
+            document.getElementById('p1-nombre').value = data.p1.nombre || '';
+            document.getElementById('p1-edad').value = data.p1.edad || '';
+            document.getElementById('p1-sexo').value = data.p1.sexo || 'Masculino';
+            document.getElementById('p1-celular').value = data.p1.celular || '';
+
+            document.getElementById('p2-nombre').value = data.p2.nombre || '';
+            document.getElementById('p2-edad').value = data.p2.edad || '';
+            document.getElementById('p2-sexo').value = data.p2.sexo || 'Femenino';
+            document.getElementById('p2-celular').value = data.p2.celular || '';
+
+            document.getElementById('btn-registrar').style.display = 'none';
+            document.getElementById('btn-editar').style.display = 'inline-block';
+            document.getElementById('btn-eliminar').style.display = 'inline-block';
+        }
+
+        function limpiarFormulario() {
+            document.getElementById('pacientes-form').reset();
+            document.getElementById('pareja-id').value = '';
+            document.getElementById('btn-registrar').style.display = 'inline-block';
+            document.getElementById('btn-editar').style.display = 'none';
+            document.getElementById('btn-eliminar').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
